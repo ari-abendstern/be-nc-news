@@ -3,6 +3,8 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
 const db = require("../db/connection.js");
+const originalEndpoints = require("../endpoints.json");
+
 
 afterAll(() => {
   db.end();
@@ -70,3 +72,15 @@ describe('/api/articles/:article_id', () => {
               });
           });
       });
+
+describe("/api", () => {
+  test("GET:200 sends a json object containing information about all endpoints to the client", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const endpoints = response.body.endpoints;
+        expect(endpoints).toEqual(originalEndpoints)
+      });
+  });
+});
