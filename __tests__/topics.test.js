@@ -3,6 +3,7 @@ const request = require("supertest");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data");
 const db = require("../db/connection.js");
+const originalEndpoints = require("../endpoints.json");
 
 afterAll(() => {
   db.end();
@@ -32,6 +33,26 @@ describe("/api/topics", () => {
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("path does not exist");
+      });
+  });
+});
+
+describe("/api", () => {
+  test("GET:200 sends a json object containing information about all endpoints to the client", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((response) => {
+        const endpoints = response.body.endpoints;
+
+        const endpointsLength = Object.keys(originalEndpoints).length;
+        expect(Object.keys(endpoints).length).toBe(endpointsLength);
+
+        for (const endpoint in endpoints) {
+          expect(typeof endpoints[endpoint].description).toBe("string");
+          expect(Array.isArray(endpoints[endpoint].queries)).toBe(true);
+          expect(typeof endpoints[endpoint].exampleResponse).toBe("object");
+        }
       });
   });
 });
