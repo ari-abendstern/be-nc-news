@@ -1,3 +1,3 @@
-const { getTopics } = require("./topics.controllers");
+const { getTopics, getEndpoints } = require("./topics.controllers");
 
-module.exports = { getTopics };
+module.exports = { getTopics, getEndpoints};
