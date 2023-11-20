@@ -2,7 +2,7 @@ const app = require("../app.js");
 const request = require("supertest");
 const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data");
-const db = require('../db/connection.js');
+const db = require("../db/connection.js");
 
 afterAll(() => {
   db.end();
@@ -23,6 +23,15 @@ describe("/api/topics", () => {
           expect(typeof topic.slug).toBe("string");
           expect(typeof topic.description).toBe("string");
         });
+      });
+  });
+
+  test("GET:404 sends an appropriate status and error message when given a non-existent path", () => {
+    return request(app)
+      .get("/api/schrodinger")
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("path does not exist");
       });
   });
 });

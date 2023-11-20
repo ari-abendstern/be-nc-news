@@ -1,3 +1,3 @@
-const {selectTopics} = require('./topics.models');
+const { selectTopics } = require("./topics.models");
 
-module.exports = {selectTopics}
+module.exports = { selectTopics };
