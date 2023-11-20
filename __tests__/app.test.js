@@ -4,6 +4,8 @@ const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
 const db = require("../db/connection.js");
 const originalEndpoints = require("../endpoints.json");
+const toBeSorted = require('jest-sorted');
+
 
 afterAll(() => {
   db.end();
@@ -45,6 +47,30 @@ describe("/api", () => {
       .then((response) => {
         const endpoints = response.body.endpoints;
         expect(endpoints).toEqual(originalEndpoints)
+      });
+  });
+});
+
+describe('GET /api/articles', () => {
+  test('GET:200 sends an array of articles to the client', () => {
+    return request(app)
+      .get('/api/articles')
+      .expect(200)
+      .then((response) => {
+        const articles = response.body.articles
+        expect(articles.length).toBe(data.articleData.length);
+        response.body.articles.forEach((article) => {
+          expect(typeof article.article_id).toBe('number');
+          expect(typeof article.author).toBe('string');
+          expect(typeof article.title).toBe('string');
+          expect(typeof article.topic).toBe('string');
+          expect(typeof article.created_at).toBe('string');
+          expect(typeof article.votes).toBe('number');
+          expect(typeof article.article_img_url).toBe('string');
+          expect(typeof article.comment_count).toBe('number');
+          expect(article).not.toHaveProperty('body')
+        });
+        expect(articles).toBeSortedBy('created_at', { descending: true })
       });
   });
 });
