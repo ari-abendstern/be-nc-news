@@ -44,15 +44,7 @@ describe("/api", () => {
       .expect(200)
       .then((response) => {
         const endpoints = response.body.endpoints;
-
-        const endpointsLength = Object.keys(originalEndpoints).length;
-        expect(Object.keys(endpoints).length).toBe(endpointsLength);
-
-        for (const endpoint in endpoints) {
-          expect(typeof endpoints[endpoint].description).toBe("string");
-          expect(Array.isArray(endpoints[endpoint].queries)).toBe(true);
-          expect(typeof endpoints[endpoint].exampleResponse).toBe("object");
-        }
+        expect(endpoints).toEqual(originalEndpoints)
       });
   });
 });
