@@ -9,7 +9,7 @@ exports.selectArticleById = (article_id) => {
       if (!article) {
         return Promise.reject({
           status: 404,
-          msg: "article does not exist",
+          msg: "not found",
         });
       }
       return article;

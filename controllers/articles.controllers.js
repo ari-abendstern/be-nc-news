@@ -37,8 +37,8 @@ exports.patchVotesByArticleId = (req, res, next) => {
     body: { inc_votes },
     params: { article_id },
   } = req;
-  incrementVotes(inc_votes, article_id)
-    .then(({rows: [article]}) => {
+  Promise.all([incrementVotes(inc_votes, article_id), selectArticleById(article_id)])
+    .then(([{rows: [article]}, redundantVariable]) => {
       res.status(200).send({ article });
     })
     .catch(next);
