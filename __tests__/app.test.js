@@ -4,8 +4,6 @@ const seed = require("../db/seeds/seed.js");
 const data = require("../db/data/test-data/index.js");
 const db = require("../db/connection.js");
 const originalEndpoints = require("../endpoints.json");
-const toBeSorted = require('jest-sorted');
-
 
 afterAll(() => {
   db.end();
@@ -23,8 +21,8 @@ describe("/api/topics", () => {
       .then((response) => {
         expect(response.body.topics.length).toBe(3);
         response.body.topics.forEach((topic) => {
-          expect(typeof topic.slug).toBe("string");
-          expect(typeof topic.description).toBe("string");
+          expect(topic.slug).toEqual(expect.any(String));
+          expect(topic.description).toEqual(expect.any(String));
         });
       });
   });
@@ -46,31 +44,31 @@ describe("/api", () => {
       .expect(200)
       .then((response) => {
         const endpoints = response.body.endpoints;
-        expect(endpoints).toEqual(originalEndpoints)
+        expect(endpoints).toEqual(originalEndpoints);
       });
   });
 });
 
-describe('GET /api/articles', () => {
-  test('GET:200 sends an array of articles to the client', () => {
+describe("GET /api/articles", () => {
+  test("GET:200 sends an array of articles to the client", () => {
     return request(app)
-      .get('/api/articles')
+      .get("/api/articles")
       .expect(200)
       .then((response) => {
-        const articles = response.body.articles
+        const articles = response.body.articles;
         expect(articles.length).toBe(data.articleData.length);
         response.body.articles.forEach((article) => {
-          expect(typeof article.article_id).toBe('number');
-          expect(typeof article.author).toBe('string');
-          expect(typeof article.title).toBe('string');
-          expect(typeof article.topic).toBe('string');
-          expect(typeof article.created_at).toBe('string');
-          expect(typeof article.votes).toBe('number');
-          expect(typeof article.article_img_url).toBe('string');
-          expect(typeof article.comment_count).toBe('number');
-          expect(article).not.toHaveProperty('body')
+          expect(article.article_id).toEqual(expect.any(Number));
+          expect(article.author).toEqual(expect.any(String));
+          expect(article.title).toEqual(expect.any(String));
+          expect(article.topic).toEqual(expect.any(String));
+          expect(article.created_at).toEqual(expect.any(String));
+          expect(article.votes).toEqual(expect.any(Number));
+          expect(article.article_img_url).toEqual(expect.any(String));
+          expect(article.comment_count).toEqual(expect.any(Number));
+          expect(article).not.toHaveProperty("body");
         });
-        expect(articles).toBeSortedBy('created_at', { descending: true })
+        expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
 });
