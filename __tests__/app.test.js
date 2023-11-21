@@ -138,7 +138,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     return (
       request(app)
         .get("/api/articles/999/comments")
-        //.expect(404)
+        .expect(404)
         .then((response) => {
           expect(response.body.msg).toBe("article does not exist");
         })
@@ -175,6 +175,7 @@ describe("POST /api/articles/:article_id/comments", () => {
       .send(newComment)
       .expect(201)
       .then(({ body: { comment } }) => {
+        console.log(`🥫🥫🕳️🪵 app.test.js line 178 >>>>> comment >>>>> `, comment);
         expect(comment.comment_id).toEqual(expect.any(Number));
         expect(comment.body).toBe(
           "I don't think it's fair to say Mitch is the only inspirational thought leader in Manchester - there is also John, Nick, Kirsty and Saleh"
@@ -185,32 +186,61 @@ describe("POST /api/articles/:article_id/comments", () => {
         expect(comment.created_at).toEqual(expect.any(String));
       });
   });
-  test.skip("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+  test('POST:400 responds with an appropriate status and error message when provided with a bad comment (missing keys)', () => {
+    const badComment = {
+      body: "I'm sure I had a name once"
+    }
+
+    return request(app)
+      .post('/api/articles/10/comments')
+      .send(badComment)
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe('bad request');
+      });
+  });
+  test('POST:404 responds with an appropriate status and error message when provided with an incorrect username)', () => {
+    const incorrectUsernameComment = {
+      username: "rumpelstiltskin",
+      body: "I bet my name wasn't in your database"
+    }
+
+    return request(app)
+      .post('/api/articles/10/comments')
+      .send(incorrectUsernameComment)
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe('not found');
+      });
+  });
+  test("POST:404 sends an appropriate status and error message when given a valid but non-existent article id", () => {
+    const commentOnNonExistentArticle = {
+      username: "rogersop",
+      body: "I love commenting on articles that don't exist",
+    };
     return (
       request(app)
-        .get("/api/articles/999/comments")
-        //.expect(404)
+        .post("/api/articles/999/comments")
+        .send(commentOnNonExistentArticle)
+        .expect(404)
         .then((response) => {
-          expect(response.body.msg).toBe("article does not exist");
+          expect(response.body.msg).toBe("not found");
         })
     );
   });
-  test.skip("GET:200 sends an empty array to the client when passed an article_id for an article that has no comments", () => {
-    return request(app)
-      .get("/api/articles/2/comments")
-      .expect(200)
-      .then((response) => {
-        const comments = response.body.comments;
-        expect(comments.length).toBe(0);
-      });
-  });
-
-  test.skip("GET:400 sends an appropriate status and error message when given an invalid id", () => {
-    return request(app)
-      .get("/api/articles/not-an-article/comments")
-      .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
-      });
-  });
-});
+  test("POST:400 sends an appropriate status and error message when given an invalid article id", () => {
+    const commentOnNonExistentArticle = {
+      username: "rogersop",
+      body: "I love commenting on articles that don't exist",
+    };
+    return (
+      request(app)
+        .post("/api/articles/not-an-article/comments")
+        .send(commentOnNonExistentArticle)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.msg).toBe("bad request");
+        })
+    );
+})
+})

@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-app.use(express.json())
+app.use(express.json());
 
 const {
   getTopics,
@@ -15,6 +15,8 @@ const {
   handleNonExistentPath,
   handleCustomErrors,
   handlePsql22P02,
+  handlePsql23502,
+  handlePsql23503,
 } = require("./errors/index");
 
 app.get("/api/topics", getTopics);
@@ -33,6 +35,10 @@ app.all("/api/*", handleNonExistentPath);
 app.use(handleCustomErrors);
 
 app.use(handlePsql22P02);
+
+app.use(handlePsql23502);
+
+app.use(handlePsql23503);
 
 app.use(handleServerErrors);
 

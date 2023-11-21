@@ -12,10 +12,12 @@ exports.selectCommentsByArticleId = (article_id) => {
 };
 
 exports.insertComment = (body, username, article_id) => {
-    return db
-      .query(
-        "INSERT INTO comments (body, author, article_id, votes, created_at) VALUES ($1, $2, $3, 0, NOW()) RETURNING *;",
-        [body, username, article_id]
-      )
-      .then(({ rows: [comment] }) => comment);
-  };
+  return db
+    .query(
+      "INSERT INTO comments (body, author, article_id, votes, created_at) VALUES ($1, $2, $3, 0, NOW()) RETURNING *;",
+      [body, username, article_id]
+    )
+    .then(({ rows: [comment] }) => {
+      return comment;
+    });
+};
