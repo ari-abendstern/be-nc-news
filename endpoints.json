@@ -70,5 +70,23 @@
         }
       ]
     }
+  },
+  "PATCH /api/articles/:article_id": {
+    "description": "increments votes of a specific article by the number specified in the req object",
+    "exampleRequestBody": {
+      "inc_votes": 11
+    },
+    "exampleResponse": {
+      "article": {
+        "article_id": 8,
+        "title": "Who is Mitch and why is he the topic of so many articles?",
+        "topic": "mitch",
+        "author": "icellusedkars",
+        "created_at": "2020-04-17T01:08:00.000Z",
+        "votes": 0,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        "comment_count": 53
+      }
+    }
   }
 }
