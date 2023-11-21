@@ -1,4 +1,14 @@
 const { getTopics, getEndpoints } = require("./topics.controllers");
-const {getArticles, getArticleById} = require('./articles.controllers');
+const {
+  getArticles,
+  getArticleById,
+  getCommentsByArticleById,
+} = require("./articles.controllers");
 
-module.exports = { getTopics, getEndpoints, getArticles, getArticleById};
+module.exports = {
+  getTopics,
+  getEndpoints,
+  getArticles,
+  getArticleById,
+  getCommentsByArticleById,
+};
