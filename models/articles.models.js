@@ -1,7 +1,7 @@
-const db = require("../db/connection");
+const db = require('../db/connection');
 
 exports.selectArticleById = (article_id) => {
-  return db
+    return db
     .query("SELECT * FROM articles WHERE articles.article_id = $1;", [
       article_id,
     ])
@@ -28,3 +28,5 @@ exports.selectArticles = () => {
       });
     });
 };
+}
+
