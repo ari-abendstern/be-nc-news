@@ -6,6 +6,7 @@ exports.selectArticleById = (article_id) => {
       article_id,
     ])
     .then(({ rows: [article] }) => {
+        console.log(`🥫🥫🕳️🪵 articles.models.js line 9 >>>>> article >>>>> `, article);
       if (!article) {
         return Promise.reject({
           status: 404,

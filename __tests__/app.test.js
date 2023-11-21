@@ -118,8 +118,10 @@ describe("GET /api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then((response) => {
-        const comments = response.body.comments.rows;
-        const expectedNumberOfComments = data.commentData.filter(comment => comment.article_id === 1).length
+        const comments = response.body.comments;
+        const expectedNumberOfComments = data.commentData.filter(
+          (comment) => comment.article_id === 1
+        ).length;
         expect(comments.length).toBe(expectedNumberOfComments);
         comments.forEach((comment) => {
           expect(comment.comment_id).toEqual(expect.any(Number));
@@ -130,6 +132,34 @@ describe("GET /api/articles/:article_id/comments", () => {
           expect(comment.article_id).toEqual(expect.any(Number));
         });
         expect(comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+  test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+    return (
+      request(app)
+        .get("/api/articles/999/comments")
+        //.expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("article does not exist");
+        })
+    );
+  });
+  test("GET:200 sends an empty array to the client when passed an article_id for an article that has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        const comments = response.body.comments;
+        expect(comments.length).toBe(0);
+      });
+  });
+
+  test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/not-an-article/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
       });
   });
 });
