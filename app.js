@@ -1,11 +1,14 @@
 const express = require("express");
 const app = express();
-const { getTopics, getArticleById, getEndpoints } = require("./controllers/index.controllers");
+
+const { getTopics, getEndpoints, getArticles, getArticleById } = require("./controllers/index.controllers");
 const { handleServerErrors, handleNonExistentPath,   handleCustomErrors,
   handlePsql22P02,
 } = require("./errors/index");
 
 app.get("/api/topics", getTopics);
+
+app.get("/api/articles", getArticles)
 
 app.get("/api", getEndpoints);
 
