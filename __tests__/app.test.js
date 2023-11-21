@@ -163,3 +163,77 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:article_id", () => {
+  test("PATCH:200 increments an article's votes by the amount in the req object", () => {
+    return request(app)
+      .patch("/api/articles/5")
+      .send({ inc_votes: 23 })
+      .expect(200)
+      .then(({ body: { article } }) => {
+        expect(article.votes).toBe(23);
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/articles/5")
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article.votes).toBe(23);
+          });
+      });
+  });
+
+  // test("POST:400 responds with an appropriate status and error message when provided with a bad comment (missing keys)", () => {
+  //   const badComment = {
+  //     body: "I'm sure I had a name once",
+  //   };
+
+  //   return request(app)
+  //     .post("/api/articles/10/comments")
+  //     .send(badComment)
+  //     .expect(400)
+  //     .then((response) => {
+  //       expect(response.body.msg).toBe("bad request");
+  //     });
+  // });
+  // test("POST:404 responds with an appropriate status and error message when provided with an incorrect username)", () => {
+  //   const incorrectUsernameComment = {
+  //     username: "rumpelstiltskin",
+  //     body: "I bet my name wasn't in your database",
+  //   };
+
+  //   return request(app)
+  //     .post("/api/articles/10/comments")
+  //     .send(incorrectUsernameComment)
+  //     .expect(404)
+  //     .then((response) => {
+  //       expect(response.body.msg).toBe("not found");
+  //     });
+  // });
+  // test("POST:404 sends an appropriate status and error message when given a valid but non-existent article id", () => {
+  //   const commentOnNonExistentArticle = {
+  //     username: "rogersop",
+  //     body: "I love commenting on articles that don't exist",
+  //   };
+  //   return request(app)
+  //     .post("/api/articles/999/comments")
+  //     .send(commentOnNonExistentArticle)
+  //     .expect(404)
+  //     .then((response) => {
+  //       expect(response.body.msg).toBe("not found");
+  //     });
+  // });
+  // test("POST:400 sends an appropriate status and error message when given an invalid article id", () => {
+  //   const commentOnNonExistentArticle = {
+  //     username: "rogersop",
+  //     body: "I love commenting on articles that don't exist",
+  //   };
+  //   return request(app)
+  //     .post("/api/articles/not-an-article/comments")
+  //     .send(commentOnNonExistentArticle)
+  //     .expect(400)
+  //     .then((response) => {
+  //       expect(response.body.msg).toBe("bad request");
+  //     });
+  // });
+});

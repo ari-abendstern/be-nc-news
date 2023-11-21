@@ -3,6 +3,7 @@ const {
   getArticles,
   getArticleById,
   getCommentsByArticleById,
+  patchVotesByArticleId,
 } = require("./articles.controllers");
 
 module.exports = {
@@ -11,4 +12,5 @@ module.exports = {
   getArticles,
   getArticleById,
   getCommentsByArticleById,
+  patchVotesByArticleId,
 };

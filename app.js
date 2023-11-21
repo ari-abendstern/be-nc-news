@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json())
 
 const {
   getTopics,
@@ -7,6 +8,7 @@ const {
   getArticles,
   getArticleById,
   getCommentsByArticleById,
+  patchVotesByArticleId,
 } = require("./controllers/index.controllers");
 const {
   handleServerErrors,
@@ -24,6 +26,8 @@ app.get("/api", getEndpoints);
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleById);
+
+app.patch("/api/articles/:article_id", patchVotesByArticleId);
 
 app.all("/api/*", handleNonExistentPath);
 app.use(handleCustomErrors);
