@@ -163,3 +163,54 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST /api/articles/:article_id/comments", () => {
+  test("POST:201 inserts a new comment to the db and sends the new comment back to the client", () => {
+    const newComment = {
+      username: "arizard",
+      body: "I don't think it's fair to say Mitch is the only inspirational thought leader in Manchester - there is also John, Nick, Kirsty and Saleh",
+    };
+    return request(app)
+      .post("/api/articles/10/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body: { comment } }) => {
+        expect(comment.comment_id).toEqual(expect.any(Number));
+        expect(comment.body).toBe(
+          "I don't think it's fair to say Mitch is the only inspirational thought leader in Manchester - there is also John, Nick, Kirsty and Saleh"
+        );
+        expect(comment.article_id).toBe(10);
+        expect(comment.author).toBe("arizard");
+        expect(comment.votes).toBe(0);
+        expect(comment.created_at).toEqual(expect.any(String));
+      });
+  });
+  test.skip("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
+    return (
+      request(app)
+        .get("/api/articles/999/comments")
+        //.expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("article does not exist");
+        })
+    );
+  });
+  test.skip("GET:200 sends an empty array to the client when passed an article_id for an article that has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then((response) => {
+        const comments = response.body.comments;
+        expect(comments.length).toBe(0);
+      });
+  });
+
+  test.skip("GET:400 sends an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/not-an-article/comments")
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
+});
