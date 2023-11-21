@@ -28,5 +28,3 @@ exports.selectArticles = () => {
       });
     });
 };
-}
-

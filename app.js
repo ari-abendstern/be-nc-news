@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 
 const { getTopics, getEndpoints, getArticles, getArticleById } = require("./controllers/index.controllers");
-const { handleServerErrors, handleNonExistentPath } = require("./errors/index");
 const { handleServerErrors, handleNonExistentPath,   handleCustomErrors,
   handlePsql22P02,
 } = require("./errors/index");
