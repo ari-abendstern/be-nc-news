@@ -326,14 +326,9 @@ describe("DELETE /api/comments/:comment_id", () => {
         return request(app)
           .get("/api/articles/1/comments")
           .then(({ body: { comments } }) => {
-            expect(comments).not.toContain({
-              comment_id: 7,
-              body: "Lobster pot",
-              article_id: 1,
-              author: "icellusedkars",
-              votes: 0,
-              created_at: "2020-05-15T20:19:00.000Z",
-            });
+            expect(comments.some((comment) => comment.comment_id === 7)).toBe(
+              false
+            );
           });
       });
   });
