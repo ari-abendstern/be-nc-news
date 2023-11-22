@@ -11,6 +11,7 @@ const {
   postCommentByArticleId,
   patchVotesByArticleId,
   deleteCommentById,
+  getUsers,
 } = require("./controllers/index.controllers");
 const {
   handleServerErrors,
@@ -25,6 +26,8 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles", getArticles);
 
+app.get("/api/users", getUsers)
+
 app.get("/api", getEndpoints);
 
 app.get("/api/articles/:article_id", getArticleById);
@@ -38,6 +41,7 @@ app.patch("/api/articles/:article_id", patchVotesByArticleId);
 app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.all("/api/*", handleNonExistentPath);
+
 app.use(handleCustomErrors);
 
 app.use(handlePsql22P02);
