@@ -8,7 +8,7 @@ const {
   getEndpoints,
   getArticles,
   getArticleById,
-  getCommentsByArticleById,
+  getCommentsByArticleId,
   postCommentByArticleId,
   patchVotesByArticleId,
 } = require("./controllers/index.controllers");

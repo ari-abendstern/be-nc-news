@@ -21,7 +21,6 @@ exports.getArticles = (req, res, next) => {
   });
 };
 
-
 exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   Promise.all([
@@ -39,12 +38,22 @@ exports.patchVotesByArticleId = (req, res, next) => {
     body: { inc_votes },
     params: { article_id },
   } = req;
-  Promise.all([incrementVotes(inc_votes, article_id), selectArticleById(article_id)])
-    .then(([{rows: [article]}, redundantVariable]) => {
-      res.status(200).send({ article });
-    )}.catch(next);
+  Promise.all([
+    incrementVotes(inc_votes, article_id),
+    selectArticleById(article_id),
+  ])
+    .then(
+      ([
+        {
+          rows: [article],
+        },
+        redundantVariable,
+      ]) => {
+        res.status(200).send({ article });
+      }
+    )
+    .catch(next);
 };
-
 
 exports.postCommentByArticleId = (req, res, next) => {
   const {

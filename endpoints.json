@@ -86,7 +86,9 @@
         "votes": 0,
         "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         "comment_count": 53
-      },
+      }
+    }
+  },
   "POST /api/articles/:article_id/comments": {
     "description": "posts a comment with a specific article id number and serves the posted comment",
     "exampleRequestBody": {

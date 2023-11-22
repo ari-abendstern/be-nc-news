@@ -195,8 +195,7 @@ describe("PATCH /api/articles/:article_id", () => {
       });
   });
 
-  test.skip("PATCH:400 responds with an appropriate status and error message when provided with a bad req object ", () => {
-    //this test throws a psql 23502, so should automatically work once branch 7 is merged
+  test("PATCH:400 responds with an appropriate status and error message when provided with a bad req object ", () => {
     return request(app)
       .patch("/api/articles/10")
       .send({})
@@ -217,19 +216,22 @@ describe("PATCH /api/articles/:article_id", () => {
   test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent article id", () => {
     return request(app)
       .patch("/api/articles/999")
-      .send({inc_votes: 11})
+      .send({ inc_votes: 11 })
       .expect(404)
       .then((response) => {
         expect(response.body.msg).toBe("not found");
       });
+  });
   test("PATCH:400 sends an appropriate status and error message when given an invalid article id", () => {
     return request(app)
       .patch("/api/articles/not-an-article")
-      .send({inc_votes: 11})
-    .then((response) => {
+      .send({ inc_votes: 11 })
+      .then((response) => {
         expect(response.body.msg).toBe("bad request");
       });
   });
+});
+
 describe("POST /api/articles/:article_id/comments", () => {
   test("POST:201 inserts a new comment to the db and sends the new comment back to the client", () => {
     const newComment = {
@@ -266,7 +268,6 @@ describe("POST /api/articles/:article_id/comments", () => {
           });
       });
   });
-
   test("POST:400 responds with an appropriate status and error message when provided with a bad comment (missing keys)", () => {
     const badComment = {
       body: "I'm sure I had a name once",
