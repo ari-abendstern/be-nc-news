@@ -1,7 +1,6 @@
 const express = require("express");
 const app = express();
-app.use(express.json())
-
+app.use(express.json());
 
 const {
   getTopics,
@@ -11,6 +10,7 @@ const {
   getCommentsByArticleId,
   postCommentByArticleId,
   patchVotesByArticleId,
+  deleteCommentById,
 } = require("./controllers/index.controllers");
 const {
   handleServerErrors,
@@ -34,6 +34,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
 
 app.patch("/api/articles/:article_id", patchVotesByArticleId);
+
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.all("/api/*", handleNonExistentPath);
 app.use(handleCustomErrors);

@@ -18,9 +18,9 @@ describe("/api/topics", () => {
     return request(app)
       .get("/api/topics")
       .expect(200)
-      .then((response) => {
-        expect(response.body.topics.length).toBe(3);
-        response.body.topics.forEach((topic) => {
+      .then(({ body: { topics } }) => {
+        expect(topics.length).toBe(3);
+        topics.forEach((topic) => {
           expect(topic.slug).toEqual(expect.any(String));
           expect(topic.description).toEqual(expect.any(String));
         });
@@ -31,8 +31,8 @@ describe("/api/topics", () => {
     return request(app)
       .get("/api/schrodinger")
       .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("path does not exist");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
       });
   });
 });
@@ -42,7 +42,7 @@ describe("/api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/2")
       .expect(200)
-      .then((response) => {
+      .then(({ body: { article: responseArticle } }) => {
         const expectedArticle = {
           article_id: 2,
           title: "Sony Vaio; or, The Laptop",
@@ -54,7 +54,6 @@ describe("/api/articles/:article_id", () => {
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         };
-        const responseArticle = response.body.article;
         expect(responseArticle).toEqual(expectedArticle);
       });
   });
@@ -62,16 +61,16 @@ describe("/api/articles/:article_id", () => {
     return request(app)
       .get("/api/articles/999")
       .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("not found");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
       });
   });
   test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
     return request(app)
       .get("/api/articles/not-an-article")
       .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
 });
@@ -81,8 +80,7 @@ describe("/api", () => {
     return request(app)
       .get("/api")
       .expect(200)
-      .then((response) => {
-        const endpoints = response.body.endpoints;
+      .then(({ body: { endpoints } }) => {
         expect(endpoints).toEqual(originalEndpoints);
       });
   });
@@ -93,8 +91,7 @@ describe("GET /api/articles", () => {
     return request(app)
       .get("/api/articles")
       .expect(200)
-      .then((response) => {
-        const articles = response.body.articles;
+      .then(({ body: { articles } }) => {
         expect(articles.length).toBe(data.articleData.length);
         articles.forEach((article) => {
           expect(article.article_id).toEqual(expect.any(Number));
@@ -117,8 +114,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/1/comments")
       .expect(200)
-      .then((response) => {
-        const comments = response.body.comments;
+      .then(({ body: { comments } }) => {
         const expectedNumberOfComments = data.commentData.filter(
           (comment) => comment.article_id === 1
         ).length;
@@ -139,8 +135,8 @@ describe("GET /api/articles/:article_id/comments", () => {
       request(app)
         .get("/api/articles/999/comments")
         //.expect(404)
-        .then((response) => {
-          expect(response.body.msg).toBe("not found");
+        .then(({ body: { msg } }) => {
+          expect(msg).toBe("not found");
         })
     );
   });
@@ -148,8 +144,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/2/comments")
       .expect(200)
-      .then((response) => {
-        const comments = response.body.comments;
+      .then(({ body: { comments } }) => {
         expect(comments.length).toBe(0);
       });
   });
@@ -158,8 +153,8 @@ describe("GET /api/articles/:article_id/comments", () => {
     return request(app)
       .get("/api/articles/not-an-article/comments")
       .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
 });
@@ -200,16 +195,16 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/10")
       .send({})
       .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       })
       .then(() => {
         return request(app)
           .patch("/api/articles/10")
           .send({ inc_votes: "gerrymandering" })
           .expect(400)
-          .then((response) => {
-            expect(response.body.msg).toBe("bad request");
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("bad request");
           });
       });
   });
@@ -218,16 +213,16 @@ describe("PATCH /api/articles/:article_id", () => {
       .patch("/api/articles/999")
       .send({ inc_votes: 11 })
       .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("not found");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
       });
   });
   test("PATCH:400 sends an appropriate status and error message when given an invalid article id", () => {
     return request(app)
       .patch("/api/articles/not-an-article")
       .send({ inc_votes: 11 })
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
 });
@@ -256,8 +251,7 @@ describe("POST /api/articles/:article_id/comments", () => {
         return request(app)
           .get("/api/articles/10/comments")
           .expect(200)
-          .then((response) => {
-            const comments = response.body.comments;
+          .then(({ body: { comments } }) => {
             expect(
               comments.some(
                 (comment) =>
@@ -277,8 +271,8 @@ describe("POST /api/articles/:article_id/comments", () => {
       .post("/api/articles/10/comments")
       .send(badComment)
       .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
   test("POST:404 responds with an appropriate status and error message when provided with an incorrect username)", () => {
@@ -291,8 +285,8 @@ describe("POST /api/articles/:article_id/comments", () => {
       .post("/api/articles/10/comments")
       .send(incorrectUsernameComment)
       .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("not found");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
       });
   });
   test("POST:404 sends an appropriate status and error message when given a valid but non-existent article id", () => {
@@ -304,8 +298,8 @@ describe("POST /api/articles/:article_id/comments", () => {
       .post("/api/articles/999/comments")
       .send(commentOnNonExistentArticle)
       .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("not found");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
       });
   });
   test("POST:400 sends an appropriate status and error message when given an invalid article id", () => {
@@ -317,8 +311,46 @@ describe("POST /api/articles/:article_id/comments", () => {
       .post("/api/articles/not-an-article/comments")
       .send(commentOnNonExistentArticle)
       .expect(400)
-      .then((response) => {
-        expect(response.body.msg).toBe("bad request");
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      });
+  });
+});
+
+describe("DELETE /api/comments/:comment_id", () => {
+  test("DELETE:204 deletes the specified comment and sends no body back", () => {
+    return request(app)
+      .delete("/api/comments/7")
+      .expect(204)
+      .then(() => {
+        return request(app)
+          .get("/api/articles/1/comments")
+          .then(({ body: { comments } }) => {
+            expect(comments).not.toContain({
+              comment_id: 7,
+              body: "Lobster pot",
+              article_id: 1,
+              author: "icellusedkars",
+              votes: 0,
+              created_at: "2020-05-15T20:19:00.000Z",
+            });
+          });
+      });
+  });
+  test("DELETE:404 responds with an appropriate status and error message when given a non-existent id", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+  test("DELETE:400 responds with an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .delete("/api/comments/no-comment")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
 });

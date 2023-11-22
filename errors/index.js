@@ -1,5 +1,5 @@
 exports.handleNonExistentPath = (req, res) => {
-  res.status(404).send({ msg: "path does not exist" });
+  res.status(404).send({ msg: "not found" });
 };
 
 exports.handleCustomErrors = (err, req, res, next) => {
