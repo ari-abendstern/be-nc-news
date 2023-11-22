@@ -19,6 +19,6 @@ module.exports = {
   selectCommentsByArticleId,
   incrementVotes,
   insertComment,
-  removeCommentById
+  removeCommentById,
   selectUsers,
 };
