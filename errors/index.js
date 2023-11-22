@@ -1,20 +1,32 @@
 exports.handleNonExistentPath = (req, res) => {
-    res.status(404).send({ msg: "path does not exist" });
-}
+  res.status(404).send({ msg: "path does not exist" });
+};
 
 exports.handleCustomErrors = (err, req, res, next) => {
-    if (err.status && err.msg) {
-      res.status(err.status).send({ msg: err.msg });
-    } else next(err);
-  };
-  
-  exports.handlePsql22P02 = (err, req, res, next) => {
-    if (err.code === "22P02") {
-      res.status(400).send({ msg: "bad request" });
-    } else next(err);
-  };
+  if (err.status && err.msg) {
+    res.status(err.status).send({ msg: err.msg });
+  } else next(err);
+};
+
+exports.handlePsql22P02 = (err, req, res, next) => {
+  if (err.code === "22P02") {
+    res.status(400).send({ msg: "bad request" });
+  } else next(err);
+};
+
+exports.handlePsql23502 = (err, req, res, next) => {
+  if (err.code === "23502") {
+    res.status(400).send({ msg: "bad request" });
+  } else next(err);
+};
+
+exports.handlePsql23503 = (err, req, res, next) => {
+  if (err.code === "23503") {
+    res.status(404).send({ msg: "not found" });
+  } else next(err);
+};
 
 exports.handleServerErrors = (err, req, res, next) => {
   console.log(err);
-  res.status(500).send({ msg: "Internal Server Error" });
+  res.status(500).send({ msg: "internal server error" });
 };

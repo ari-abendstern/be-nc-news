@@ -3,6 +3,7 @@ const {
   selectArticles,
   selectCommentsByArticleId,
   incrementVotes,
+  insertComment,
 } = require("../models/index.models");
 
 exports.getArticleById = (req, res, next) => {
@@ -20,7 +21,8 @@ exports.getArticles = (req, res, next) => {
   });
 };
 
-exports.getCommentsByArticleById = (req, res, next) => {
+
+exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   Promise.all([
     selectCommentsByArticleId(article_id),
@@ -40,6 +42,18 @@ exports.patchVotesByArticleId = (req, res, next) => {
   Promise.all([incrementVotes(inc_votes, article_id), selectArticleById(article_id)])
     .then(([{rows: [article]}, redundantVariable]) => {
       res.status(200).send({ article });
+    )}.catch(next);
+};
+
+
+exports.postCommentByArticleId = (req, res, next) => {
+  const {
+    body: { username, body },
+    params: { article_id },
+  } = req;
+  insertComment(body, username, article_id)
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };

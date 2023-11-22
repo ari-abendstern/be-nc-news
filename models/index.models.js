@@ -4,7 +4,10 @@ const {
   selectArticleById,
   incrementVotes,
 } = require("./articles.models");
-const { selectCommentsByArticleId } = require("./comments.models");
+const {
+  selectCommentsByArticleId,
+  insertComment,
+} = require("./comments.models");
 
 module.exports = {
   selectTopics,
@@ -13,4 +16,5 @@ module.exports = {
   selectArticleById,
   selectCommentsByArticleId,
   incrementVotes,
+  insertComment,
 };

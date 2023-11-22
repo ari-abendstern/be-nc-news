@@ -13,7 +13,7 @@ exports.selectArticleById = (article_id) => {
         });
       }
       return article;
-    });
+    })
 };
 
 exports.selectArticles = () => {
