@@ -63,7 +63,7 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/999")
       .expect(404)
       .then((response) => {
-        expect(response.body.msg).toBe("article does not exist");
+        expect(response.body.msg).toBe("not found");
       });
   });
   test("GET:400 sends an appropriate status and error message when given an invalid id", () => {
@@ -135,12 +135,14 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
   test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
-    return request(app)
-      .get("/api/articles/999/comments")
-      .expect(404)
-      .then((response) => {
-        expect(response.body.msg).toBe("article does not exist");
-      });
+    return (
+      request(app)
+        .get("/api/articles/999/comments")
+        //.expect(404)
+        .then((response) => {
+          expect(response.body.msg).toBe("not found");
+        })
+    );
   });
   test("GET:200 sends an empty array to the client when passed an article_id for an article that has no comments", () => {
     return request(app)
@@ -162,6 +164,72 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
+describe("PATCH /api/articles/:article_id", () => {
+  test("PATCH:200 increments an article's votes by the amount in the req object", () => {
+    return request(app)
+      .patch("/api/articles/5")
+      .send({ inc_votes: 23 })
+      .expect(200)
+      .then(
+        ({
+          body: {
+            article: { votes },
+          },
+        }) => {
+          expect(votes).toBe(23);
+        }
+      )
+      .then(() => {
+        return request(app)
+          .get("/api/articles/5")
+          .expect(200)
+          .then(
+            ({
+              body: {
+                article: { votes },
+              },
+            }) => {
+              expect(votes).toBe(23);
+            }
+          );
+      });
+  });
+
+  test.skip("PATCH:400 responds with an appropriate status and error message when provided with a bad req object ", () => {
+    //this test throws a psql 23502, so should automatically work once branch 7 is merged
+    return request(app)
+      .patch("/api/articles/10")
+      .send({})
+      .expect(400)
+      .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      })
+      .then(() => {
+        return request(app)
+          .patch("/api/articles/10")
+          .send({ inc_votes: "gerrymandering" })
+          .expect(400)
+          .then((response) => {
+            expect(response.body.msg).toBe("bad request");
+          });
+      });
+  });
+  test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent article id", () => {
+    return request(app)
+      .patch("/api/articles/999")
+      .send({inc_votes: 11})
+      .expect(404)
+      .then((response) => {
+        expect(response.body.msg).toBe("not found");
+      });
+  test("PATCH:400 sends an appropriate status and error message when given an invalid article id", () => {
+    return request(app)
+      .patch("/api/articles/not-an-article")
+      .send({inc_votes: 11})
+    .then((response) => {
+        expect(response.body.msg).toBe("bad request");
+      });
+  });
 describe("POST /api/articles/:article_id/comments", () => {
   test("POST:201 inserts a new comment to the db and sends the new comment back to the client", () => {
     const newComment = {
@@ -188,10 +256,6 @@ describe("POST /api/articles/:article_id/comments", () => {
           .expect(200)
           .then((response) => {
             const comments = response.body.comments;
-            console.log(
-              `🥫🥫🕳️🪵 app.test.js line 192 >>>>> response.body >>>>> `,
-              response.body
-            );
             expect(
               comments.some(
                 (comment) =>

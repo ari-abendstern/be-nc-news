@@ -1,14 +1,16 @@
 const express = require("express");
 const app = express();
-app.use(express.json());
+app.use(express.json())
+
 
 const {
   getTopics,
   getEndpoints,
   getArticles,
   getArticleById,
-  getCommentsByArticleId,
+  getCommentsByArticleById,
   postCommentByArticleId,
+  patchVotesByArticleId,
 } = require("./controllers/index.controllers");
 const {
   handleServerErrors,
@@ -30,6 +32,8 @@ app.get("/api/articles/:article_id", getArticleById);
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", postCommentByArticleId);
+
+app.patch("/api/articles/:article_id", patchVotesByArticleId);
 
 app.all("/api/*", handleNonExistentPath);
 app.use(handleCustomErrors);
