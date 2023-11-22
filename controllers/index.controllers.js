@@ -7,6 +7,8 @@ const {
   postCommentByArticleId,
 } = require("./articles.controllers");
 
+const {getUsers} = require('./users.controllers');
+
 module.exports = {
   getTopics,
   getEndpoints,
@@ -15,4 +17,6 @@ module.exports = {
   getCommentsByArticleId,
   patchVotesByArticleId,
   postCommentByArticleId,
+
+  getUsers
 };

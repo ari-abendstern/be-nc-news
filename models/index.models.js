@@ -9,6 +9,8 @@ const {
   insertComment,
 } = require("./comments.models");
 
+const { selectUsers } = require("./users.models");
+
 module.exports = {
   selectTopics,
   selectEndpoints,
@@ -17,4 +19,6 @@ module.exports = {
   selectCommentsByArticleId,
   incrementVotes,
   insertComment,
+
+  selectUsers,
 };
