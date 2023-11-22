@@ -131,14 +131,12 @@ describe("GET /api/articles/:article_id/comments", () => {
       });
   });
   test("GET:404 sends an appropriate status and error message when given a valid but non-existent id", () => {
-    return (
-      request(app)
-        .get("/api/articles/999/comments")
-        .expect(404)
-        .then(({ body: { msg } }) => {
-          expect(msg).toBe("not found");
-        })
-    );
+    return request(app)
+      .get("/api/articles/999/comments")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
   });
   test("GET:200 sends an empty array to the client when passed an article_id for an article that has no comments", () => {
     return request(app)
@@ -349,42 +347,6 @@ describe("DELETE /api/comments/:comment_id", () => {
       });
   });
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 describe("GET:200 /api/users", () => {
   test("GET:200 sends an array of users to the client", () => {

@@ -7,7 +7,7 @@ const {
 const {
   selectCommentsByArticleId,
   insertComment,
-  removeCommentById
+  removeCommentById,
 } = require("./comments.models");
 const { selectUsers } = require("./users.models");
 
