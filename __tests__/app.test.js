@@ -107,6 +107,9 @@ describe("GET /api/articles", () => {
         expect(articles).toBeSortedBy("created_at", { descending: true });
       });
   });
+  test.skip("allows the client to use a query to filter the results by topic", () => {
+
+  });
 });
 
 describe("GET /api/articles/:article_id/comments", () => {
