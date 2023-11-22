@@ -6,6 +6,7 @@ const {
   patchVotesByArticleId,
   postCommentByArticleId,
 } = require("./articles.controllers");
+const { deleteCommentById } = require("./comments.controllers");
 
 const {getUsers} = require('./users.controllers');
 
@@ -17,6 +18,6 @@ module.exports = {
   getCommentsByArticleId,
   patchVotesByArticleId,
   postCommentByArticleId,
-
+  deleteCommentById,
   getUsers
 };

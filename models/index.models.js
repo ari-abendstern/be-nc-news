@@ -7,8 +7,8 @@ const {
 const {
   selectCommentsByArticleId,
   insertComment,
+  removeCommentById
 } = require("./comments.models");
-
 const { selectUsers } = require("./users.models");
 
 module.exports = {
@@ -19,6 +19,6 @@ module.exports = {
   selectCommentsByArticleId,
   incrementVotes,
   insertComment,
-
+  removeCommentById,
   selectUsers,
 };

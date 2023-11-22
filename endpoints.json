@@ -106,18 +106,11 @@
       }
     }
   },
-
-
-
-
-
-
-
-
-
-
-
-  
+  "DELETE /api/comments/:comment_id": {
+    "description": "Deletes a coment with a specific comment id",
+    "queries": [],
+    "exampleResponse": {}
+  },
   "GET /api/users": {
     "description": "serves an array of all users",
     "queries": [],
