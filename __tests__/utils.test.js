@@ -115,15 +115,3 @@ describe("formatComments", () => {
     expect(formattedComments[0].created_at).toEqual(new Date(timestamp));
   });
 });
-
-describe.skip("checkExists", () => {
-  test("should throw an error when passed a topic that does not exist", async () => {
-    const functionResponse = async () => {
-      await checkExists("topics", "slug", "crosseyedcyclops");
-    };
-    expect(functionResponse()).reject.toMatchObject({ message: 'bad request' })
-  });
-  test.skip("should not throw an error when passed an existing topic", () => {
-    expect(checkExists("topics", "slug", "cats")).rejects();
-  });
-});
