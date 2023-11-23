@@ -1,3 +1,4 @@
+const { checkExists } = require("../db/seeds/utils");
 const {
   selectArticleById,
   selectArticles,
@@ -16,9 +17,17 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  selectArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  const { topic } = req.query;
+
+  const articlePromises = [selectArticles(topic)];
+
+  if (topic) articlePromises.push(checkExists("topics", "slug", topic));
+
+  Promise.all(articlePromises)
+    .then(([articles, redundantVariable]) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
