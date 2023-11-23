@@ -2,7 +2,20 @@ const {
   convertTimestampToDate,
   createRef,
   formatComments,
+  checkExists,
 } = require("../db/seeds/utils");
+const request = require("supertest");
+const seed = require("../db/seeds/seed.js");
+const data = require("../db/data/test-data/index.js");
+const db = require("../db/connection.js");
+
+afterAll(() => {
+  db.end();
+});
+
+beforeEach(() => {
+  return seed(data);
+});
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
@@ -100,5 +113,17 @@ describe("formatComments", () => {
     const comments = [{ created_at: timestamp }];
     const formattedComments = formatComments(comments, {});
     expect(formattedComments[0].created_at).toEqual(new Date(timestamp));
+  });
+});
+
+describe.skip("checkExists", () => {
+  test("should throw an error when passed a topic that does not exist", async () => {
+    const functionResponse = async () => {
+      await checkExists("topics", "slug", "crosseyedcyclops");
+    };
+    expect(functionResponse()).reject.toMatchObject({ message: 'bad request' })
+  });
+  test.skip("should not throw an error when passed an existing topic", () => {
+    expect(checkExists("topics", "slug", "cats")).rejects();
   });
 });
