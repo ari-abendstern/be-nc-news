@@ -3,7 +3,20 @@ const db = require("../db/connection");
 exports.selectArticleById = (article_id) => {
   return db
     .query(
-      "SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.body, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM articles LEFT OUTER JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;",
+      `SELECT 
+        articles.article_id,
+        articles.title,
+        articles.topic,
+        articles.author,
+        articles.body,
+        articles.created_at,
+        articles.votes,
+        articles.article_img_url,
+        COUNT(comments.article_id) AS comment_count
+      FROM articles
+      LEFT OUTER JOIN comments ON articles.article_id = comments.article_id
+      WHERE articles.article_id = $1
+      GROUP BY articles.article_id;`,
       [article_id]
     )
     .then(({ rows: [article] }) => {
@@ -20,7 +33,8 @@ exports.selectArticleById = (article_id) => {
 };
 
 exports.selectArticles = (topic, sort_by, order) => {
-  if (sort_by &&
+  if (
+    sort_by &&
     ![
       "article_id",
       "author",
@@ -49,7 +63,20 @@ exports.selectArticles = (topic, sort_by, order) => {
 
   return db
     .query(
-      `SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM articles LEFT OUTER JOIN comments  ON articles.article_id = comments.article_id ${topicString} GROUP BY articles.article_id ORDER BY ${sort_by || 'created_at'} ${order || 'DESC'};`,
+      `SELECT 
+        articles.article_id,
+        articles.title,
+        articles.topic,
+        articles.author,
+        articles.created_at,
+        articles.votes,
+        articles.article_img_url,
+        COUNT(comments.article_id) AS comment_count
+      FROM articles
+      LEFT OUTER JOIN comments ON articles.article_id = comments.article_id
+      ${topicString}
+      GROUP BY articles.article_id
+      ORDER BY ${sort_by || "created_at"} ${order || "DESC"}`,
       queryValues
     )
     .then((result) => {
