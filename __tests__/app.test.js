@@ -135,12 +135,36 @@ describe("GET /api/articles", () => {
         expect(msg).toBe("not found");
       });
   });
-  test("GET:200 sends an empty array to the client when passed a query topic that has no associated articles", () => {
+  test("GET:200 sends an empty array to the client when passed a topic query that has no associated articles", () => {
     return request(app)
       .get("/api/articles?topic=paper")
       .expect(200)
       .then(({ body: { articles } }) => {
         expect(articles.length).toBe(0);
+      });
+  });
+  test("GET:200 allows the client to sort results by any of the columns in the table", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles).toBeSortedBy("votes");
+      });
+  });
+  test("GET:400 prevents the client from using invalid sort queries", () => {
+    return request(app)
+      .get("/api/articles?sort_by=droptablearticles")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid sort query");
+      });
+  });
+  test("GET:400 prevents the client from using invalid order queries", () => {
+    return request(app)
+      .get("/api/articles?sort_by=votes&order=selectallfromusers")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid order query");
       });
   });
 });
@@ -399,4 +423,3 @@ describe("GET:200 /api/users", () => {
       });
   });
 });
-

@@ -17,9 +17,11 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { topic } = req.query;
+  const { topic, sort_by, order } = req.query;
 
-  const articlePromises = [selectArticles(topic)];
+  console.log(`🥫🥫🕳️🪵 articles.controllers.js line 22 >>>>> topic, sort_by, order >>>>> `, topic, sort_by, order);
+
+  const articlePromises = [selectArticles(topic, sort_by, order)];
 
   if (topic) articlePromises.push(checkExists("topics", "slug", topic));
 
