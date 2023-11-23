@@ -96,7 +96,7 @@ describe("/api", () => {
   });
 });
 
-describe("GET /api/articles", () => {
+describe("/api/articles", () => {
   test("GET:200 sends an array of articles to the client", () => {
     return request(app)
       .get("/api/articles")
@@ -169,7 +169,7 @@ describe("GET /api/articles", () => {
   });
 });
 
-describe("GET /api/articles/:article_id/comments", () => {
+describe("/api/articles/:article_id/comments", () => {
   test("GET:200 sends an array of comments to the client", () => {
     return request(app)
       .get("/api/articles/1/comments")
@@ -217,7 +217,7 @@ describe("GET /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("PATCH /api/articles/:article_id", () => {
+describe("/api/articles/:article_id", () => {
   test("PATCH:200 increments an article's votes by the amount in the req object", () => {
     return request(app)
       .patch("/api/articles/5")
@@ -285,7 +285,7 @@ describe("PATCH /api/articles/:article_id", () => {
   });
 });
 
-describe("POST /api/articles/:article_id/comments", () => {
+describe("/api/articles/:article_id/comments", () => {
   test("POST:201 inserts a new comment to the db and sends the new comment back to the client", () => {
     const newComment = {
       username: "arizard",
@@ -375,7 +375,7 @@ describe("POST /api/articles/:article_id/comments", () => {
   });
 });
 
-describe("DELETE /api/comments/:comment_id", () => {
+describe("/api/comments/:comment_id", () => {
   test("DELETE:204 deletes the specified comment and sends no body back", () => {
     return request(app)
       .delete("/api/comments/7")
@@ -408,7 +408,7 @@ describe("DELETE /api/comments/:comment_id", () => {
   });
 });
 
-describe("GET:200 /api/users", () => {
+describe("/api/users", () => {
   test("GET:200 sends an array of users to the client", () => {
     return request(app)
       .get("/api/users")
