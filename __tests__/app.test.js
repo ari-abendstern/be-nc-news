@@ -43,7 +43,6 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/2")
       .expect(200)
       .then(({ body: { article: responseArticle } }) => {
-        console.log(`🥫🥫🕳️🪵 app.test.js line 46 >>>>> responseArticle >>>>> `, responseArticle);
         const expectedArticle = {
           article_id: 2,
           title: "Sony Vaio; or, The Laptop",
