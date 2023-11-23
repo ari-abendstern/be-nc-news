@@ -120,5 +120,16 @@
       "name": "ari",
       "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
     }
+  },
+  "GET /api/users/:username": {
+    "description": "serves a specific user by username",
+    "queries": [],
+    "exampleResponse": {
+      "user": {
+        "username": "arizard",
+        "name": "ari",
+        "avatar_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png"
+      }
+    }
   }
 }
