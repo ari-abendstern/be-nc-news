@@ -2,9 +2,10 @@ const db = require("../db/connection");
 
 exports.selectArticleById = (article_id) => {
   return db
-    .query("SELECT * FROM articles WHERE articles.article_id = $1;", [
-      article_id,
-    ])
+    .query(
+      "SELECT articles.article_id, articles.title, articles.topic, articles.author, articles.body, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count FROM articles LEFT OUTER JOIN comments ON articles.article_id = comments.article_id WHERE articles.article_id = $1 GROUP BY articles.article_id;",
+      [article_id]
+    )
     .then(({ rows: [article] }) => {
       if (!article) {
         return Promise.reject({
@@ -12,6 +13,8 @@ exports.selectArticleById = (article_id) => {
           msg: "not found",
         });
       }
+
+      article.comment_count = +article.comment_count;
       return article;
     });
 };
