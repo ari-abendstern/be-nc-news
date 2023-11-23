@@ -87,7 +87,7 @@ exports.selectArticles = (topic, sort_by, order) => {
     });
 };
 
-exports.incrementVotes = (inc_votes, article_id) => {
+exports.incrementArticleVotes = (inc_votes, article_id) => {
   return db
     .query(
       "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;",

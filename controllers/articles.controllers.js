@@ -3,7 +3,7 @@ const {
   selectArticleById,
   selectArticles,
   selectCommentsByArticleId,
-  incrementVotes,
+  incrementArticleVotes,
   insertComment,
 } = require("../models/index.models");
 
@@ -49,7 +49,7 @@ exports.patchVotesByArticleId = (req, res, next) => {
     params: { article_id },
   } = req;
   Promise.all([
-    incrementVotes(inc_votes, article_id),
+    incrementArticleVotes(inc_votes, article_id),
     checkExists("articles", "article_id", article_id),
   ])
     .then(
