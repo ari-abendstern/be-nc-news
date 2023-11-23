@@ -43,6 +43,7 @@ describe("/api/articles/:article_id", () => {
       .get("/api/articles/2")
       .expect(200)
       .then(({ body: { article: responseArticle } }) => {
+        console.log(`🥫🥫🕳️🪵 app.test.js line 46 >>>>> responseArticle >>>>> `, responseArticle);
         const expectedArticle = {
           article_id: 2,
           title: "Sony Vaio; or, The Laptop",
@@ -53,6 +54,7 @@ describe("/api/articles/:article_id", () => {
           votes: 0,
           article_img_url:
             "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+          comment_count: 0
         };
         expect(responseArticle).toEqual(expectedArticle);
       });
