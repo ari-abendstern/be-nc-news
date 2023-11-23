@@ -423,3 +423,28 @@ describe("GET:200 /api/users", () => {
       });
   });
 });
+
+describe("/api/users/:username", () => {
+  test("GET:200 sends a single user to the client", () => {
+    return request(app)
+      .get("/api/users/arizard")
+      .expect(200)
+      .then(({ body: { user: responseUser } }) => {
+        const expectedUser = {
+          username: "arizard",
+          name: "ari",
+          avatar_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        };
+        expect(responseUser).toMatchObject(expectedUser);
+      });
+  });
+  test("GET:404 sends an appropriate status and error message when given a valid but non-existent username", () => {
+    return request(app)
+      .get("/api/users/rumpelstiltskin")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+});

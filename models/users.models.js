@@ -1,7 +1,21 @@
 const db = require("../db/connection");
 
 exports.selectUsers = () => {
-    return db.query("SELECT * FROM users;").then(({rows}) => {
-      return rows;
+  return db.query("SELECT * FROM users;").then(({ rows }) => {
+    return rows;
+  });
+};
+
+exports.selectUserByUsername = (username) => {
+  return db
+    .query(`SELECT * FROM users WHERE username = $1;`, [username])
+    .then(({ rows: [user] }) => {
+      if (!user) {
+        return Promise.reject({
+          status: 404,
+          msg: "not found",
+        });
+      }
+      return user
     });
-  };
+};
