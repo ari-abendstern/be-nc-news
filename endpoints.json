@@ -23,7 +23,7 @@
   },
   "GET /api/articles": {
     "description": "serves an array of all articles",
-    "queries": [],
+    "queries": ["topic"],
     "exampleResponse": {
       "articles": [
         {
@@ -41,7 +41,7 @@
   },
   "GET /api/articles/:article_id": {
     "description": "serves a specific article by id",
-    "queries": ["topic"],
+    "queries": [],
     "exampleResponse": {
       "article": {
         "article_id": 2,
