@@ -56,7 +56,6 @@ exports.patchVotesByArticleId = (req, res, next) => {
         {
           rows: [article],
         },
-        redundantVariable,
       ]) => {
         res.status(200).send({ article });
       }
