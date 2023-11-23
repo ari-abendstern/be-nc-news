@@ -24,7 +24,7 @@ exports.getArticles = (req, res, next) => {
   if (topic) articlePromises.push(checkExists("topics", "slug", topic));
 
   Promise.all(articlePromises)
-    .then(([articles, redundantVariable]) => {
+    .then(([articles]) => {
       res.status(200).send({ articles });
     })
     .catch(next);
@@ -36,7 +36,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
     selectCommentsByArticleId(article_id),
     selectArticleById(article_id),
   ])
-    .then(([comments, articles]) => {
+    .then(([comments]) => {
       res.status(200).send({ comments });
     })
     .catch(next);
