@@ -17,9 +17,10 @@ exports.getArticleById = (req, res, next) => {
 };
 
 exports.getArticles = (req, res, next) => {
-  const { topic } = req.query;
+  const { topic, sort_by, order } = req.query;
 
-  const articlePromises = [selectArticles(topic)];
+
+  const articlePromises = [selectArticles(topic, sort_by, order)];
 
   if (topic) articlePromises.push(checkExists("topics", "slug", topic));
 
@@ -34,7 +35,7 @@ exports.getCommentsByArticleId = (req, res, next) => {
   const { article_id } = req.params;
   Promise.all([
     selectCommentsByArticleId(article_id),
-    selectArticleById(article_id),
+    checkExists("articles", "article_id", article_id),
   ])
     .then(([comments]) => {
       res.status(200).send({ comments });
@@ -49,7 +50,7 @@ exports.patchVotesByArticleId = (req, res, next) => {
   } = req;
   Promise.all([
     incrementVotes(inc_votes, article_id),
-    selectArticleById(article_id),
+    checkExists("articles", "article_id", article_id),
   ])
     .then(
       ([
