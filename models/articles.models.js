@@ -32,7 +32,7 @@ exports.selectArticleById = (article_id) => {
     });
 };
 
-exports.selectArticles = (topic, sort_by, order) => {
+exports.selectArticles = (topic, sort_by, order, limit, p) => {
   if (
     sort_by &&
     ![
@@ -53,6 +53,14 @@ exports.selectArticles = (topic, sort_by, order) => {
     return Promise.reject({ status: 400, msg: "invalid order query" });
   }
 
+  if (limit && Number.isNaN(+limit)) {
+    return Promise.reject({ status: 400, msg: "invalid limit query" });
+  }
+
+  if (p && Number.isNaN(+p)) {
+    return Promise.reject({ status: 400, msg: "invalid page query" });
+  }
+
   const queryValues = [];
   let topicString = "";
 
@@ -60,6 +68,11 @@ exports.selectArticles = (topic, sort_by, order) => {
     queryValues.push(topic);
     topicString = "WHERE topic = $1";
   }
+
+  if (!limit) limit = 10;
+  if (p) {
+    p = (p - 1) * limit;
+  } else p = 0;
 
   return db
     .query(
@@ -76,7 +89,8 @@ exports.selectArticles = (topic, sort_by, order) => {
       LEFT OUTER JOIN comments ON articles.article_id = comments.article_id
       ${topicString}
       GROUP BY articles.article_id
-      ORDER BY ${sort_by || "created_at"} ${order || "DESC"}`,
+      ORDER BY ${sort_by || "created_at"} ${order || "DESC"}
+      LIMIT ${limit} OFFSET ${p}`,
       queryValues
     )
     .then((result) => {
