@@ -102,7 +102,6 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body: { articles } }) => {
-        expect(articles.length).toBe(data.articleData.length);
         articles.forEach((article) => {
           expect(article.article_id).toEqual(expect.any(Number));
           expect(article.author).toEqual(expect.any(String));
@@ -165,6 +164,50 @@ describe("/api/articles", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("invalid order query");
+      });
+  });
+  test("GET:200 accept pagination queries, defaulting to page 1 limit 10 if a pagination query is not included", () => {
+    return request(app)
+      .get("/api/articles?sort_by=article_id&order=asc")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(10);
+        expect(articles[0].article_id).toBe(1);
+        expect(articles[9].article_id).toBe(10);
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/articles?sort_by=article_id&order=asc&limit=5&p=2")
+          .expect(200);
+      })
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(5);
+        expect(articles[0].article_id).toBe(6);
+        expect(articles[4].article_id).toBe(10);
+      });
+  });
+  test("GET:400 prevents the client from using invalid pagination queries", () => {
+    return request(app)
+      .get("/api/articles?limit=droptablearticles")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid limit query");
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/articles?p=droptablearticles")
+          .expect(400);
+      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid page query");
+      });
+  });
+  test("GET:200 returns an empty array when passed a number higher than the maximum number of pages", () => {
+    return request(app)
+      .get("/api/articles?p=9999")
+      .expect(200)
+      .then(({ body: { articles } }) => {
+        expect(articles.length).toBe(0);
       });
   });
 });
@@ -233,19 +276,17 @@ describe("/api/articles/:article_id", () => {
         }
       )
       .then(() => {
-        return request(app)
-          .get("/api/articles/5")
-          .expect(200)
-          .then(
-            ({
-              body: {
-                article: { votes },
-              },
-            }) => {
-              expect(votes).toBe(23);
-            }
-          );
-      });
+        return request(app).get("/api/articles/5").expect(200);
+      })
+      .then(
+        ({
+          body: {
+            article: { votes },
+          },
+        }) => {
+          expect(votes).toBe(23);
+        }
+      );
   });
 
   test("PATCH:400 responds with an appropriate status and error message when provided with a bad req object ", () => {
@@ -260,10 +301,10 @@ describe("/api/articles/:article_id", () => {
         return request(app)
           .patch("/api/articles/10")
           .send({ inc_votes: "gerrymandering" })
-          .expect(400)
-          .then(({ body: { msg } }) => {
-            expect(msg).toBe("bad request");
-          });
+          .expect(400);
+      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
   test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent article id", () => {
