@@ -177,5 +177,19 @@
         "article_img_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
       }
     }
+  },
+  "POST /api/topics": {
+    "description": "posts a new topic and serves the posted topic",
+    "exampleRequestBody": {
+      "slug": "existence",
+      "description": "I console.log, therefore I am"
+    },
+
+    "exampleResponse": {
+      "topic": {
+        "slug": "existence",
+        "description": "I console.log, therefore I am"
+      }
+    }
   }
 }

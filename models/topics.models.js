@@ -1,12 +1,23 @@
-const db = require('../db/connection');
-const endpoints = require('../endpoints.json');
+const db = require("../db/connection");
+const endpoints = require("../endpoints.json");
 
 exports.selectTopics = () => {
-    return db.query("SELECT * FROM topics;").then((result) => {
-      return result.rows;
-    });
-  };
+  return db.query("SELECT * FROM topics;").then((result) => {
+    return result.rows;
+  });
+};
 
-  exports.selectEndpoints = () => {
-    return endpoints
-  }
+exports.insertTopic = (slug, description) => {
+  return db
+    .query(
+      "INSERT INTO topics (slug, description) VALUES ($1, $2) RETURNING *;",
+      [slug, description]
+    )
+    .then(({ rows: [topic] }) => {
+      return topic;
+    });
+};
+
+exports.selectEndpoints = () => {
+  return endpoints;
+};

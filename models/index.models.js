@@ -1,4 +1,4 @@
-const { selectTopics, selectEndpoints } = require("./topics.models");
+const { selectTopics, insertTopic, selectEndpoints } = require("./topics.models");
 const {
   selectArticles,
   selectArticleById,
@@ -15,6 +15,7 @@ const { selectUsers, selectUserByUsername } = require("./users.models");
 
 module.exports = {
   selectTopics,
+  insertTopic,
   selectEndpoints,
   selectArticles,
   selectArticleById,

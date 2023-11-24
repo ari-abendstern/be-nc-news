@@ -1,4 +1,4 @@
-const { getTopics, getEndpoints } = require("./topics.controllers");
+const { getTopics, postTopic, getEndpoints } = require("./topics.controllers");
 const {
   getArticles,
   getArticleById,
@@ -15,6 +15,7 @@ const { getUsers, getUserByUsername } = require("./users.controllers");
 
 module.exports = {
   getTopics,
+  postTopic,
   getEndpoints,
   getArticles,
   getArticleById,
