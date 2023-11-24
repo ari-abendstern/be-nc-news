@@ -1,9 +1,24 @@
 const db = require("../db/connection");
 
-exports.selectCommentsByArticleId = (article_id) => {
+exports.selectCommentsByArticleId = (article_id, limit, p) => {
+  if (limit && Number.isNaN(+limit)) {
+    return Promise.reject({ status: 400, msg: "invalid limit query" });
+  }
+
+  if (p && Number.isNaN(+p)) {
+    return Promise.reject({ status: 400, msg: "invalid page query" });
+  }
+  if (!limit) limit = 10;
+  if (p) {
+    p = (p - 1) * limit;
+  } else p = 0;
+
   return db
     .query(
-      "SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;",
+      `SELECT * FROM comments
+      WHERE article_id = $1 
+      ORDER BY created_at DESC 
+      LIMIT ${limit} OFFSET ${p}`,
       [article_id]
     )
     .then(({ rows: comments }) => {

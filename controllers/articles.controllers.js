@@ -24,7 +24,6 @@ exports.getArticles = (req, res, next) => {
 
   if (topic) articlePromises.push(checkExists("topics", "slug", topic));
 
-
   Promise.all(articlePromises)
     .then(([articles]) => {
       res.status(200).send({ articles });
@@ -33,9 +32,13 @@ exports.getArticles = (req, res, next) => {
 };
 
 exports.getCommentsByArticleId = (req, res, next) => {
-  const { article_id } = req.params;
+  const {
+    query: { limit, p },
+    params: { article_id },
+  } = req;
+
   Promise.all([
-    selectCommentsByArticleId(article_id),
+    selectCommentsByArticleId(article_id, limit, p),
     checkExists("articles", "article_id", article_id),
   ])
     .then(([comments]) => {
