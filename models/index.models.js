@@ -2,12 +2,13 @@ const { selectTopics, selectEndpoints } = require("./topics.models");
 const {
   selectArticles,
   selectArticleById,
-  incrementVotes,
+  incrementArticleVotes,
 } = require("./articles.models");
 const {
   selectCommentsByArticleId,
   insertComment,
   removeCommentById,
+  incrementCommentVotes,
 } = require("./comments.models");
 const { selectUsers, selectUserByUsername } = require("./users.models");
 
@@ -17,9 +18,10 @@ module.exports = {
   selectArticles,
   selectArticleById,
   selectCommentsByArticleId,
-  incrementVotes,
+  incrementArticleVotes,
   insertComment,
   removeCommentById,
+  incrementCommentVotes,
   selectUsers,
   selectUserByUsername,
 };

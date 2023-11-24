@@ -448,3 +448,71 @@ describe("/api/users/:username", () => {
       });
   });
 });
+
+describe("/api/comments/:comment_id", () => {
+  test("PATCH:200 increments an comment's votes by the amount in the req object", () => {
+    return request(app)
+      .patch("/api/comments/4")
+      .send({ inc_votes: 55 })
+      .expect(200)
+      .then(
+        ({
+          body: {
+            comment: { votes },
+          },
+        }) => {
+          expect(votes).toBe(-45);
+        }
+      )
+      .then(() => {
+        return request(app)
+          .get("/api/articles/1/comments")
+          .expect(200)
+          .then(({ body: { comments } }) => {
+            expect(comments).toEqual(
+              expect.arrayContaining([
+                expect.objectContaining({
+                  comment_id: 4,
+                  votes: -45,
+                }),
+              ])
+            );
+          });
+      });
+  });
+  test("PATCH:400 responds with an appropriate status and error message when provided with a bad req object ", () => {
+    return request(app)
+      .patch("/api/comments/5")
+      .send({})
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      })
+      .then(() => {
+        return request(app)
+          .patch("/api/comments/5")
+          .send({ inc_votes: "gerrymandering" })
+          .expect(400)
+          .then(({ body: { msg } }) => {
+            expect(msg).toBe("bad request");
+          });
+      });
+  });
+  test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent comment id", () => {
+    return request(app)
+      .patch("/api/comments/999")
+      .send({ inc_votes: 11 })
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+  test("PATCH:400 sends an appropriate status and error message when given an invalid comment id", () => {
+    return request(app)
+      .patch("/api/comments/no-comment")
+      .send({ inc_votes: 11 })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      });
+  });
+});
