@@ -689,3 +689,47 @@ describe("/api/articles", () => {
       });
   });
 });
+
+describe("/api/topics", () => {
+  test("POST:201 inserts a new topic to the db and sends the new topic back to the client", () => {
+    const newTopic = {
+      slug: "existence",
+      description: "I console.log, therefore I am",
+    };
+    return request(app)
+      .post("/api/topics")
+      .send(newTopic)
+      .expect(201)
+      .then(({ body: { topic } }) => {
+        expect(topic.slug).toBe("existence");
+        expect(topic.description).toBe("I console.log, therefore I am");
+      })
+      .then(() => {
+        return request(app).get(`/api/topics`).expect(200);
+      })
+      .then(({ body: { topics } }) => {
+        expect(topics).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              slug: "existence",
+              description: "I console.log, therefore I am",
+            }),
+          ])
+        );
+      });
+  });
+  test("POST:400 responds with an appropriate status and error message when provided with a bad topic req object (missing keys)", () => {
+    const badTopic = {
+      description:
+        "I couldn't think of a slug so I didn't include one, hope that's ok?",
+    };
+
+    return request(app)
+      .post("/api/topics")
+      .send(badTopic)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      });
+  });
+});
