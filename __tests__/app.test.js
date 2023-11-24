@@ -218,10 +218,6 @@ describe("/api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body: { comments } }) => {
-        const expectedNumberOfComments = data.commentData.filter(
-          (comment) => comment.article_id === 1
-        ).length;
-        expect(comments.length).toBe(expectedNumberOfComments);
         comments.forEach((comment) => {
           expect(comment.comment_id).toEqual(expect.any(Number));
           expect(comment.author).toEqual(expect.any(String));
@@ -256,6 +252,46 @@ describe("/api/articles/:article_id/comments", () => {
       .expect(400)
       .then(({ body: { msg } }) => {
         expect(msg).toBe("bad request");
+      });
+  });
+  test("GET:200 accept pagination queries, defaulting to page 1 limit 10 if a pagination query is not included", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length > 10).toBe(false);
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/articles/1/comments?limit=5&p=2")
+          .expect(200);
+      })
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(5);
+      });
+  });
+  test("GET:400 prevents the client from using invalid pagination queries", () => {
+    return request(app)
+      .get("/api/articles/1/comments?limit=droptablearticles")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid limit query");
+      })
+      .then(() => {
+        return request(app)
+          .get("/api/articles/1/comments?p=droptablearticles")
+          .expect(400);
+      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("invalid page query");
+      });
+  });
+  test("GET:200 returns an empty array when passed a number higher than the maximum number of pages", () => {
+    return request(app)
+      .get("/api/articles/1/comments?p=9999")
+      .expect(200)
+      .then(({ body: { comments } }) => {
+        expect(comments.length).toBe(0);
       });
   });
 });
