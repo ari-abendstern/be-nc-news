@@ -516,3 +516,99 @@ describe("/api/comments/:comment_id", () => {
       });
   });
 });
+
+describe("/api/articles", () => {
+  test("POST:201 inserts a new article to the db and sends the new article back to the client", () => {
+    const newArticle = {
+      author: "arizard",
+      title: "The Shortest Word in the English Language",
+      body: "I",
+      topic: "paper",
+      article_img_url:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article.title).toBe("The Shortest Word in the English Language");
+        expect(article.body).toBe("I");
+        expect(article.author).toBe("arizard");
+        expect(article.topic).toBe("paper");
+        expect(article.article_img_url).toBe(
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
+        );
+        expect(article.article_id).toEqual(expect.any(Number));
+        expect(article.votes).toBe(0);
+        expect(article.created_at).toEqual(expect.any(String));
+        return article.article_id;
+      })
+      .then((article_id) => {
+        return request(app)
+          .get(`/api/articles/${article_id}`)
+          .expect(200)
+          .then(({ body: { article } }) => {
+            expect(article.title).toBe(
+              "The Shortest Word in the English Language"
+            );
+            expect(article.body).toBe("I");
+            expect(article.author).toBe("arizard");
+            expect(article.topic).toBe("paper");
+            expect(article.article_img_url).toBe(
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
+            );
+            expect(article.article_id).toEqual(expect.any(Number));
+            expect(article.votes).toBe(0);
+            expect(article.created_at).toEqual(expect.any(String));
+            expect(article.comment_count).toBe(0);
+          });
+      });
+  });
+  test("POST:201 adds a default image url if one is not provided in the request body", () => {
+    const newArticle = {
+      author: "arizard",
+      title: "My Design Shortcomings",
+      body: "I always struggle to find a good image to go with my articles",
+      topic: "paper",
+    };
+    return request(app)
+      .post("/api/articles")
+      .send(newArticle)
+      .expect(201)
+      .then(({ body: { article } }) => {
+        expect(article.article_img_url).toBe(
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        );
+      });
+  });
+  test("POST:400 responds with an appropriate status and error message when provided with a bad comment (missing keys)", () => {
+    const badArticle = {
+      auhthor: "I have a terrible habit of submitting incomplete articl",
+    };
+
+    return request(app)
+      .post("/api/articles")
+      .send(badArticle)
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      });
+  });
+  test("POST:404 responds with an appropriate status and error message when provided with an incorrect username)", () => {
+    const incorrectUsernameArticle = {
+      author: "rumpelstiltskin",
+      title: "Can you find my name?",
+      body: "No",
+      topic: "paper",
+    };
+
+    return request(app)
+      .post("/api/articles")
+      .send(incorrectUsernameArticle)
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+});

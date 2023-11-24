@@ -3,6 +3,7 @@ const {
   selectArticles,
   selectArticleById,
   incrementArticleVotes,
+  insertArticle,
 } = require("./articles.models");
 const {
   selectCommentsByArticleId,
@@ -19,6 +20,7 @@ module.exports = {
   selectArticleById,
   selectCommentsByArticleId,
   incrementArticleVotes,
+  insertArticle,
   insertComment,
   removeCommentById,
   incrementCommentVotes,

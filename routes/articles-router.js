@@ -5,9 +5,10 @@ const {
   patchVotesByArticleId,
   getCommentsByArticleId,
   postCommentByArticleId,
+  postArticle,
 } = require("../controllers/index.controllers");
 
-articlesRouter.route("/").get(getArticles);
+articlesRouter.route("/").get(getArticles).post(postArticle);
 
 articlesRouter
   .route("/:article_id")

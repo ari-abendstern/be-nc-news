@@ -97,3 +97,18 @@ exports.incrementArticleVotes = (inc_votes, article_id) => {
       return article;
     });
 };
+
+exports.insertArticle = (author, title, topic, body, article_img_url) => {
+  if (!article_img_url)
+    article_img_url =
+      "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700";
+
+  return db
+    .query(
+      "INSERT INTO articles (author, title, topic, body, article_img_url, created_at, votes) VALUES ($1, $2, $3, $4, $5, NOW(), 0) RETURNING *;",
+      [author, title, topic, body, article_img_url]
+    )
+    .then(({ rows: [article] }) => {
+      return article;
+    });
+};

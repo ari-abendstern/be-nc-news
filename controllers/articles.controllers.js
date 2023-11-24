@@ -5,6 +5,7 @@ const {
   selectCommentsByArticleId,
   incrementArticleVotes,
   insertComment,
+  insertArticle,
 } = require("../models/index.models");
 
 exports.getArticleById = (req, res, next) => {
@@ -18,7 +19,6 @@ exports.getArticleById = (req, res, next) => {
 
 exports.getArticles = (req, res, next) => {
   const { topic, sort_by, order } = req.query;
-
 
   const articlePromises = [selectArticles(topic, sort_by, order)];
 
@@ -72,6 +72,17 @@ exports.postCommentByArticleId = (req, res, next) => {
   insertComment(body, username, article_id)
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.postArticle = (req, res, next) => {
+  const {
+    body: { author, title, topic, body, article_img_url },
+  } = req;
+  insertArticle(author, title, topic, body, article_img_url)
+    .then((article) => {
+      res.status(201).send({ article });
     })
     .catch(next);
 };

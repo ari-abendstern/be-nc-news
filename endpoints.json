@@ -147,5 +147,35 @@
         "created_at": "2020-02-23T12:01:00.000Z"
       }
     }
+  },
+  "POST /api/articles": {
+    "description": "posts a new article and serves the posted article",
+    "exampleRequestBody": [
+      {
+        "author": "arizard",
+        "title": "The Shortest Word in the English Language - an article with an image URL in the request body",
+        "body": "I",
+        "topic": "paper",
+        "article_img_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
+      },
+      {
+        "author": "arizard",
+        "title": "My Design Shortcomings - an example of what happens when you don't include an image in the request body",
+        "body": "I always struggle to find a good image to go with my articles, luckily the NC News API will add a default!",
+        "topic": "paper"
+      }
+    ],
+    "exampleResponse": {
+      "article": {
+        "article_id": 14,
+        "title": "The Shortest Word in the English Language",
+        "topic": "paper",
+        "author": "arizard",
+        "body": "I",
+        "created_at": "2023-11-24T11:51:30.379Z",
+        "votes": 0,
+        "article_img_url": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
+      }
+    }
   }
 }
