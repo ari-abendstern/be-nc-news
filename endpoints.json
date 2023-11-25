@@ -191,5 +191,10 @@
         "description": "I console.log, therefore I am"
       }
     }
+  },
+  "DELETE /api/articles/:article_id": {
+    "description": "Deletes an article with a specific article id",
+    "queries": [],
+    "exampleResponse": {}
   }
 }

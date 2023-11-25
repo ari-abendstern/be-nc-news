@@ -2,6 +2,7 @@ const { getTopics, postTopic, getEndpoints } = require("./topics.controllers");
 const {
   getArticles,
   getArticleById,
+  deleteArticleById,
   getCommentsByArticleId,
   patchVotesByArticleId,
   postCommentByArticleId,
@@ -19,6 +20,7 @@ module.exports = {
   getEndpoints,
   getArticles,
   getArticleById,
+  deleteArticleById,
   getCommentsByArticleId,
   postArticle,
   patchVotesByArticleId,

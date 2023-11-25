@@ -1,7 +1,12 @@
-const { selectTopics, insertTopic, selectEndpoints } = require("./topics.models");
+const {
+  selectTopics,
+  insertTopic,
+  selectEndpoints,
+} = require("./topics.models");
 const {
   selectArticles,
   selectArticleById,
+  removeArticleById,
   incrementArticleVotes,
   insertArticle,
 } = require("./articles.models");
@@ -19,6 +24,7 @@ module.exports = {
   selectEndpoints,
   selectArticles,
   selectArticleById,
+  removeArticleById,
   selectCommentsByArticleId,
   incrementArticleVotes,
   insertArticle,

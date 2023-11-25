@@ -6,6 +6,7 @@ const {
   incrementArticleVotes,
   insertComment,
   insertArticle,
+  removeArticleById,
 } = require("../models/index.models");
 
 exports.getArticleById = (req, res, next) => {
@@ -87,6 +88,15 @@ exports.postArticle = (req, res, next) => {
   insertArticle(author, title, topic, body, article_img_url)
     .then((article) => {
       res.status(201).send({ article });
+    })
+    .catch(next);
+};
+
+exports.deleteArticleById = (req, res, next) => {
+  const { article_id } = req.params;
+  removeArticleById(article_id)
+    .then(() => {
+      res.status(204).send();
     })
     .catch(next);
 };
