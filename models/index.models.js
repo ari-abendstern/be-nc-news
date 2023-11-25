@@ -22,16 +22,16 @@ const selectEndpoints = () => {
 module.exports = {
   selectTopics,
   insertTopic,
-  selectEndpoints,
   selectArticles,
   selectArticleById,
   removeArticleById,
-  selectCommentsByArticleId,
   incrementArticleVotes,
   insertArticle,
+  selectCommentsByArticleId,
   insertComment,
   removeCommentById,
   incrementCommentVotes,
   selectUsers,
   selectUserByUsername,
+  selectEndpoints,
 };
