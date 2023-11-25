@@ -104,7 +104,10 @@ exports.selectArticles = (topic, sort_by, order, limit, p) => {
 exports.incrementArticleVotes = (inc_votes, article_id) => {
   return db
     .query(
-      "UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *;",
+      `UPDATE articles
+      SET votes = votes + $1
+      WHERE article_id = $2
+      RETURNING *;`,
       [inc_votes, article_id]
     )
     .then((article) => {
@@ -119,7 +122,25 @@ exports.insertArticle = (author, title, topic, body, article_img_url) => {
 
   return db
     .query(
-      "INSERT INTO articles (author, title, topic, body, article_img_url, created_at, votes) VALUES ($1, $2, $3, $4, $5, NOW(), 0) RETURNING *;",
+      `INSERT INTO articles(
+        author, 
+        title, 
+        topic, 
+        body, 
+        article_img_url, 
+        created_at, 
+        votes
+      )
+      VALUES (
+        $1,
+        $2, 
+        $3, 
+        $4, 
+        $5, 
+        NOW(), 
+        0
+      ) 
+      RETURNING *;`,
       [author, title, topic, body, article_img_url]
     )
     .then(({ rows: [article] }) => {
@@ -129,9 +150,12 @@ exports.insertArticle = (author, title, topic, body, article_img_url) => {
 
 exports.removeArticleById = (article_id) => {
   return db
-    .query("DELETE FROM articles WHERE article_id = $1 RETURNING *;", [
-      article_id,
-    ])
+    .query(
+      `DELETE FROM articles
+      WHERE article_id = $1
+      RETURNING *;`,
+      [article_id]
+    )
     .then(({ rows }) => {
       const article = rows[0];
       if (!article) {

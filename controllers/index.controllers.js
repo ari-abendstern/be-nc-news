@@ -1,4 +1,4 @@
-const { getTopics, postTopic, getEndpoints } = require("./topics.controllers");
+const { getTopics, postTopic } = require("./topics.controllers");
 const {
   getArticles,
   getArticleById,
@@ -13,20 +13,25 @@ const {
   patchVotesByCommentId,
 } = require("./comments.controllers");
 const { getUsers, getUserByUsername } = require("./users.controllers");
+const { selectEndpoints } = require("../models/index.models");
+
+const getEndpoints = (req, res, next) => {
+  res.status(200).send({ endpoints: selectEndpoints() });
+};
 
 module.exports = {
   getTopics,
   postTopic,
-  getEndpoints,
   getArticles,
   getArticleById,
   deleteArticleById,
   getCommentsByArticleId,
-  postArticle,
   patchVotesByArticleId,
   postCommentByArticleId,
+  postArticle,
   deleteCommentById,
+  patchVotesByCommentId,
   getUsers,
   getUserByUsername,
-  patchVotesByCommentId,
+  getEndpoints,
 };

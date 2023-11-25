@@ -1,4 +1,4 @@
-const { selectTopics, selectEndpoints, insertTopic } = require("../models/index.models");
+const { selectTopics, insertTopic } = require("../models/index.models");
 
 exports.getTopics = (req, res, next) => {
   selectTopics().then((topics) => {
@@ -15,8 +15,4 @@ exports.postTopic = (req, res, next) => {
       res.status(201).send({ topic });
     })
     .catch(next);
-};
-
-exports.getEndpoints = (req, res, next) => {
-  res.status(200).send({ endpoints: selectEndpoints() });
 };
