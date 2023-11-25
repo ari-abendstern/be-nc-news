@@ -733,3 +733,30 @@ describe("/api/topics", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("DELETE:204 deletes the specified article and sends no body back", () => {
+    return request(app)
+      .delete("/api/articles/6")
+      .expect(204)
+      .then(() => {
+        return request(app).get("/api/articles/6").expect(404);
+      });
+  });
+  test("DELETE:404 responds with an appropriate status and error message when given a non-existent id", () => {
+    return request(app)
+      .delete("/api/articles/999")
+      .expect(404)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("not found");
+      });
+  });
+  test("DELETE:400 responds with an appropriate status and error message when given an invalid id", () => {
+    return request(app)
+      .delete("/api/articles/no-article")
+      .expect(400)
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
+      });
+  });
+});

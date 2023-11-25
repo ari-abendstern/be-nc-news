@@ -126,3 +126,20 @@ exports.insertArticle = (author, title, topic, body, article_img_url) => {
       return article;
     });
 };
+
+exports.removeArticleById = (article_id) => {
+  return db
+    .query("DELETE FROM articles WHERE article_id = $1 RETURNING *;", [
+      article_id,
+    ])
+    .then(({ rows }) => {
+      const article = rows[0];
+      if (!article) {
+        return Promise.reject({
+          status: 404,
+          msg: "not found",
+        });
+      }
+      return article;
+    });
+};
