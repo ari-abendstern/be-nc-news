@@ -1,5 +1,4 @@
 const db = require("../db/connection");
-const endpoints = require("../endpoints.json");
 
 exports.selectTopics = () => {
   return db.query("SELECT * FROM topics;").then((result) => {
@@ -16,8 +15,4 @@ exports.insertTopic = (slug, description) => {
     .then(({ rows: [topic] }) => {
       return topic;
     });
-};
-
-exports.selectEndpoints = () => {
-  return endpoints;
 };
