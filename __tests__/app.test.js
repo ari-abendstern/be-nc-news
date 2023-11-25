@@ -383,18 +383,16 @@ describe("/api/articles/:article_id/comments", () => {
         expect(comment.created_at).toEqual(expect.any(String));
       })
       .then(() => {
-        return request(app)
-          .get("/api/articles/10/comments")
-          .expect(200)
-          .then(({ body: { comments } }) => {
-            expect(
-              comments.some(
-                (comment) =>
-                  comment.body ===
-                  "I don't think it's fair to say Mitch is the only inspirational thought leader in Manchester - there is also John, Nick, Kirsty and Saleh"
-              )
-            ).toBe(true);
-          });
+        return request(app).get("/api/articles/10/comments").expect(200);
+      })
+      .then(({ body: { comments } }) => {
+        expect(
+          comments.some(
+            (comment) =>
+              comment.body ===
+              "I don't think it's fair to say Mitch is the only inspirational thought leader in Manchester - there is also John, Nick, Kirsty and Saleh"
+          )
+        ).toBe(true);
       });
   });
   test("POST:400 responds with an appropriate status and error message when provided with a bad comment (missing keys)", () => {
@@ -429,6 +427,7 @@ describe("/api/articles/:article_id/comments", () => {
       username: "rogersop",
       body: "I love commenting on articles that don't exist",
     };
+
     return request(app)
       .post("/api/articles/999/comments")
       .send(commentOnNonExistentArticle)
@@ -458,13 +457,12 @@ describe("/api/comments/:comment_id", () => {
       .delete("/api/comments/7")
       .expect(204)
       .then(() => {
-        return request(app)
-          .get("/api/articles/1/comments")
-          .then(({ body: { comments } }) => {
-            expect(comments.some((comment) => comment.comment_id === 7)).toBe(
-              false
-            );
-          });
+        return request(app).get("/api/articles/1/comments");
+      })
+      .then(({ body: { comments } }) => {
+        expect(comments.some((comment) => comment.comment_id === 7)).toBe(
+          false
+        );
       });
   });
   test("DELETE:404 responds with an appropriate status and error message when given a non-existent id", () => {
@@ -542,19 +540,17 @@ describe("/api/comments/:comment_id", () => {
         }
       )
       .then(() => {
-        return request(app)
-          .get("/api/articles/1/comments")
-          .expect(200)
-          .then(({ body: { comments } }) => {
-            expect(comments).toEqual(
-              expect.arrayContaining([
-                expect.objectContaining({
-                  comment_id: 4,
-                  votes: -45,
-                }),
-              ])
-            );
-          });
+        return request(app).get("/api/articles/1/comments").expect(200);
+      })
+      .then(({ body: { comments } }) => {
+        expect(comments).toEqual(
+          expect.arrayContaining([
+            expect.objectContaining({
+              comment_id: 4,
+              votes: -45,
+            }),
+          ])
+        );
       });
   });
   test("PATCH:400 responds with an appropriate status and error message when provided with a bad req object ", () => {
@@ -569,10 +565,10 @@ describe("/api/comments/:comment_id", () => {
         return request(app)
           .patch("/api/comments/5")
           .send({ inc_votes: "gerrymandering" })
-          .expect(400)
-          .then(({ body: { msg } }) => {
-            expect(msg).toBe("bad request");
-          });
+          .expect(400);
+      })
+      .then(({ body: { msg } }) => {
+        expect(msg).toBe("bad request");
       });
   });
   test("PATCH:404 sends an appropriate status and error message when given a valid but non-existent comment id", () => {
@@ -622,24 +618,20 @@ describe("/api/articles", () => {
         return article.article_id;
       })
       .then((article_id) => {
-        return request(app)
-          .get(`/api/articles/${article_id}`)
-          .expect(200)
-          .then(({ body: { article } }) => {
-            expect(article.title).toBe(
-              "The Shortest Word in the English Language"
-            );
-            expect(article.body).toBe("I");
-            expect(article.author).toBe("arizard");
-            expect(article.topic).toBe("paper");
-            expect(article.article_img_url).toBe(
-              "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
-            );
-            expect(article.article_id).toEqual(expect.any(Number));
-            expect(article.votes).toBe(0);
-            expect(article.created_at).toEqual(expect.any(String));
-            expect(article.comment_count).toBe(0);
-          });
+        return request(app).get(`/api/articles/${article_id}`).expect(200);
+      })
+      .then(({ body: { article } }) => {
+        expect(article.title).toBe("The Shortest Word in the English Language");
+        expect(article.body).toBe("I");
+        expect(article.author).toBe("arizard");
+        expect(article.topic).toBe("paper");
+        expect(article.article_img_url).toBe(
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/IPA_Unicode_0x026A.svg/1200px-IPA_Unicode_0x026A.svg.png"
+        );
+        expect(article.article_id).toEqual(expect.any(Number));
+        expect(article.votes).toBe(0);
+        expect(article.created_at).toEqual(expect.any(String));
+        expect(article.comment_count).toBe(0);
       });
   });
   test("POST:201 adds a default image url if one is not provided in the request body", () => {
@@ -649,6 +641,7 @@ describe("/api/articles", () => {
       body: "I always struggle to find a good image to go with my articles",
       topic: "paper",
     };
+
     return request(app)
       .post("/api/articles")
       .send(newArticle)
@@ -696,6 +689,7 @@ describe("/api/topics", () => {
       slug: "existence",
       description: "I console.log, therefore I am",
     };
+
     return request(app)
       .post("/api/topics")
       .send(newTopic)
