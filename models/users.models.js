@@ -16,6 +16,6 @@ exports.selectUserByUsername = (username) => {
           msg: "not found",
         });
       }
-      return user
+      return user;
     });
 };
