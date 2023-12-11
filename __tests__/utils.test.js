@@ -2,20 +2,8 @@ const {
   convertTimestampToDate,
   createRef,
   formatComments,
-  checkExists,
 } = require("../db/seeds/utils");
-const request = require("supertest");
-const seed = require("../db/seeds/seed.js");
-const data = require("../db/data/test-data/index.js");
-const db = require("../db/connection.js");
 
-afterAll(() => {
-  db.end();
-});
-
-beforeEach(() => {
-  return seed(data);
-});
 
 describe("convertTimestampToDate", () => {
   test("returns a new object", () => {
