@@ -11,8 +11,8 @@ In order to run the local development version of NC News, you'll need to make su
 1. Fork and clone the repository at https://github.com/ari-abendstern/nc-news
 2. Run `npm install` in the terminal to install all dependencies.
 
-3. Create two environment variable files. These should be called `.env.development` and `.env.test`. Inside `.env.development`, set the PGDATABASE to nc-news by adding the line `PGDATABASE=nc_news`. Inside `.env.test`, set the PGDATABASE to nc-news-test with the line `PGDATABASE=nc_news-test`.
-4. Create the local development database by running the command `npm run setup-db` and then seed it using the command `npm run seed`.
+3. Create two environment variable files. These should be called `.env.development` and `.env.test`. Inside `.env.development`, set the PGDATABASE to nc-news by adding the line `PGDATABASE=nc_news`. Inside `.env.test`, set the PGDATABASE to nc-news-test with the line `PGDATABASE=nc_news_test`.
+4. Create the local development database by running the command `npm run setup-dbs` and then seed it using the command `npm run seed`.
 
 ## Testing
 
